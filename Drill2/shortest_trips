@@ -1,0 +1,9 @@
+SELECT 
+	trip_id,
+	MIN(duration)
+FROM
+	trips
+GROUP BY trip_id	
+ORDER BY MIN(duration) ASC
+LIMIT 22 --without the limit I saw there were 22 60-min trips
+	

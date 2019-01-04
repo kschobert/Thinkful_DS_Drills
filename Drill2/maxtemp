@@ -1,0 +1,12 @@
+SELECT 
+	MAX(maxtemperaturef),
+	date,
+	zip
+FROM
+	weather
+GROUP BY 3	, 2
+ORDER BY MAX(maxtemperaturef) DESC
+LIMIT 1
+	
+--ORDER BY maxtemperaturef DESC	
+	
