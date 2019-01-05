@@ -1,0 +1,11 @@
+WITH count_table AS
+(SELECT station_id, COUNT(*) station_full_count
+FROM status
+WHERE docks_available = 0
+group by station_id)
+
+SELECT count_table.station_id, count_table.station_full_count, stations.name
+FROM count_table
+JOIN stations
+ON stations.station_id = count_table.station_id
+ORDER BY station_id DESC

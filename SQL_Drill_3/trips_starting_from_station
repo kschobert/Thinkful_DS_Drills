@@ -1,0 +1,10 @@
+WITH start_count_table as
+(SELECT start_station, count(*) start_count
+FROM trips
+group by start_station)
+
+SELECT s.dockcount, sc.start_station, sc.start_count
+FROM start_count_table sc
+LEFT JOIN stations s
+ON s.name = sc.start_station
+ORDER BY s.dockcount DESC

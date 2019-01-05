@@ -1,0 +1,13 @@
+
+WITH rainy_days
+AS (SELECT	DATE(date) rain_date--, events
+	FROM weather
+	WHERE events = 'Rain'
+   	GROUP BY 1
+   )
+SELECT trips.duration, trips.trip_id, rainy_days.rain_date rain_in_at_least_1_zip --DATE(trips.start_date)--rainy_days.events
+FROM trips
+JOIN rainy_days
+ON DATE(rainy_days.rain_date) = DATE(trips.start_date)
+ORDER BY duration DESC
+LIMIT 3
