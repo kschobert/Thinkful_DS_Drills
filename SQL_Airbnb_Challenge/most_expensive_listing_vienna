@@ -1,0 +1,16 @@
+SELECT * FROM listings
+ORDER BY price DESC
+LIMIT 5
+
+--Here we have the top 5 most expensive rooms. The winner is a 9270 euro ($10,563) private room in the Hietzing
+--neighborhood of Vienna. It is described in its title as a "20qm" room. qm == m^2. qm is a German shorthand.
+
+--After looking at the page for this room on airbnb.com, I am growing suspicious of this price being legitimate.
+--Joe's room is not worth this large amount of money per night. It's just one of many rooms in a unit shared with Joe's
+--roomates. Joe has received many positive reviews online, leading me to believe he may have changed the price to something
+--ridiculous after deciding he would not have people stay in his room. No one has left a review since 2015. 
+
+
+-- Here is the listing:
+-- https://www.airbnb.com/rooms/4836452?guests=1&adults=1
+

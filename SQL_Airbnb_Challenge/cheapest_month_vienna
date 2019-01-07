@@ -1,0 +1,72 @@
+/* I have thought really hard about this. I first went about the problem a totally different way 
+and came to inconclusive results. I tried to find each listings cheapest month, but most listings are
+not around all year. Also some listings have the same price over several months. Finding an average month
+is really complicated. Consider [11,12,1]. Finding the first month is complicated because of this wraparound
+as well. (The smallest month will be 1 if there is any wraparound). I tried looking at listings with a only
+one cheapest month. That got me an answer but when I looked for the most expensive month with that prcess, 
+I found it was roughly the same month. This is because it is rare for a listing to be available all year.
+A lot of them are available for just a few months. So asking for the most expensive / cheapest time for each listing
+is not that informative. Here is that code regardless:
+
+----first give calendar (<-I renamed that to end with "ar") a new column price_clean with a numeric value for price.
+
+--ALTER TABLE calendar
+--ADD price_clean NUMERIC
+
+--UPDATE calendar
+--SET price_clean = CAST(REPLACE(REPLACE(price, '$', ''),',','') AS NUMERIC)
+
+
+WITH same_month AS (
+WITH cal 
+AS(
+SELECT 	
+	listing_id,
+	max(CAST(REPLACE(REPLACE(price, '$', ''),',','') AS NUMERIC)) price_clean_min --toggle this min and max to find cheapest and most expensive
+FROM 
+	calendar
+WHERE price IS NOT NULL
+GROUP BY listing_id			 
+			)
+
+SELECT 
+		cal.listing_id, 
+		MIN(EXTRACT(MONTH FROM calendar.calender_date)) key_month_min, 
+		MAX(EXTRACT(MONTH FROM calendar.calender_date)) key_month_max, 
+		calendar.price_clean 
+FROM cal
+JOIN calendar
+ON cal.listing_id = calendar.listing_id AND cal.price_clean_min = calendar.price_clean
+GROUP BY 1,4
+order by cal.listing_id)
+			
+SELECT key_month_min, count(*) FROM same_month
+WHERE key_month_max = key_month_min		
+GROUP BY key_month_min
+								   
+
+now, here is the code I will work with. It just finds the average price per month for all the listings. It's
+simpler but maybe not as informative as we want. It would be great to look at the cheapest 100 listings each month,
+since we are likely trying to give advice to someone looking to pick a cheap airbnb. But this will do I think.
+
+
+The cheapest month is a February and the most expensive is December. 
+*/
+
+WITH mostly_available_listings as 
+(SELECT id, availability_365
+FROM listings
+WHERE availability_365 > 0)
+
+SELECT 
+	--mal.id, 
+	EXTRACT(MONTH FROM calendar.calender_date) month_,  AVG(calendar.price_clean) average_cost--, COUNT(calendar.price_clean)
+FROM
+	mostly_available_listings mal
+JOIN
+	calendar
+ON calendar.listing_id = mal.id
+
+group by EXTRACT(MONTH FROM calendar.calender_date)
+order by month_
+

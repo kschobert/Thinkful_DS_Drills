@@ -1,0 +1,5 @@
+SELECT neighbourhood, COUNT(*) FROM listings
+GROUP BY neighbourhood
+
+--Leopoldstadt has the greatest number of listings. We will thus call it the most popular neighborhood. 
+--Landstra§e comes in 2nd and Neubau and Alsergrund are 3rd. 
